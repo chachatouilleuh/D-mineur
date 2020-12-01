@@ -66,33 +66,72 @@ def demineur():
     ligne = largeur
     colonne = hauteur
     nbBombe= (largeur*hauteur)//4
-
+    nbBombeAdj = 0
 
     plateau = initTableau(ligne,colonne)
     plateauMines = initMines(ligne,colonne)
 
     afficher(plateau)
-    afficher(plateauMines)
+    #afficher(plateauMines)
     #je place les bombes
     placerbombe(plateauMines, nbBombe)
     afficher(plateauMines)
 
-
+    gameOver = False
     choixJoueur=0
     #je demande au joueur d'entrer une coordonnée
-    while (tour<len(plateau)*len(plateau[0])-bombe and choixJoueur != "b"):
+    while (tour<len(plateau)*len(plateau[0])-bombe and not(gameOver)):
         choixJoueur=0
+        print("-")
+        afficher(plateau)
+        print("-")
+
         print('choisir une ligne :', end=" ")
         x = int(input())
         print('choisir une colonne :', end=" ")
         y = int(input())
         choixJoueur=plateauMines[x][y]
+
         if choixJoueur == "b":
             print ("T un raT")
+            gameOver = True
+
+        elif (not(plateau[x][y]=="x")):
+            tour -= 1
+
+        elif (tour == len(plateau)*len(plateau[0])-bombe):
+            print("Victoire")
+
         else: 
             print ("Yay, continue !")
-            #plateau.replace(choixJoueur)
-            #afficher(plateau)
-        tour += 1 
+        tour += 1
+        taille = len(plateau)
+        if(x<taille and y<len(plateau[0])):
+         
+            if( x<taille-1 and plateauMines[y][x+1] == "b"):
+                nbBombeAdj += 1
+                    
+            if( x>0 and plateauMines[y][x-1] == "b"):
+                nbBombeAdj += 1
+                    
+            if( y>0 and plateauMines[y-1][x] == "b"):
+                nbBombeAdj += 1
+                
+            if( y>0 and x>0 and plateauMines[y-1][x-1] == "b"):
+                nbBombeAdj += 1
+                    
+            if( y>0 and x<taille and plateauMines[y-1][x+1] == "b"):
+                nbBombeAdj += 1
 
+            if( y<taille and plateauMines[y+1][x] == "b"):
+                nbBombeAdj += 1
+
+            if( y<taille and x>0 and plateauMines[y+1][x-1] == "b"):
+                nbBombeAdj += 1
+
+            if( y<taille and x<taille and plateauMines[y+1][x+1] == "b"):
+                nbBombeAdj += 1
+
+            plateau[y][x] = nbBombeAdj
+    
 demineur()
